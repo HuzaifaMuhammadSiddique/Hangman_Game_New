@@ -1,0 +1,210 @@
+import random
+
+def get_words_dict():
+  words = {
+      "animals" : [
+      "tiger", "elephant", "dolphin", "giraffe", "kangaroo", "zebra", "panda", "leopard", "hippopotamus", "rhinoceros",
+      "lion", "cheetah", "bear", "wolf", "fox", "rabbit", "squirrel", "deer", "moose", "bat", "otter", "beaver", "rat",
+      "mouse", "hedgehog", "porcupine", "goat", "sheep", "cow", "horse", "donkey", "camel", "llama", "alpaca", "dog",
+      "cat", "frog", "toad", "snake", "lizard", "crocodile", "alligator", "turtle", "tortoise", "shark", "whale", "seal",
+      "walrus", "octopus", "squid", "crab", "lobster", "jellyfish", "starfish", "penguin", "eagle", "hawk", "falcon",
+      "owl", "sparrow", "pigeon", "parrot", "flamingo", "ostrich", "peacock", "chicken", "duck", "goose", "turkey"
+      ],
+      "fruits" : [
+      "banana", "mango", "strawberry", "pineapple", "orange", "apple", "grape", "blueberry", "papaya", "watermelon",
+      "peach", "plum", "apricot", "nectarine", "pear", "kiwi", "pomegranate", "cherry", "coconut", "lime", "lemon",
+      "grapefruit", "blackberry", "raspberry", "dragonfruit", "passionfruit", "guava", "fig", "date", "persimmon",
+      "lychee", "cranberry", "tangerine", "cantaloupe", "honeydew", "jackfruit", "durian", "olive", "kumquat", "mulberry"
+      ],
+      "countries" : [
+      "brazil", "canada", "japan", "australia", "india", "germany", "france", "mexico", "egypt", "norway",
+      "united_states", "united_kingdom", "china", "russia", "italy", "spain", "argentina", "south_korea", "indonesia",
+      "south_africa", "kenya", "nigeria", "ethiopia", "vietnam", "thailand", "philippines", "malaysia", "pakistan",
+      "bangladesh", "nepal", "sri_lanka", "sweden", "finland", "denmark", "netherlands", "switzerland", "austria",
+      "poland", "greece", "turkey", "iran", "iraq", "saudi_arabia", "uae", "new_zealand", "chile", "colombia",
+      "peru", "venezuela", "morocco", "algeria", "tunisia"
+      ],
+      "colors" : [
+      "red", "blue", "green", "yellow", "purple", "orange", "turquoise", "maroon", "pink", "black",
+      "white", "gray", "brown", "cyan", "magenta", "lime", "indigo", "violet", "teal", "beige",
+      "gold", "silver", "navy", "olive", "peach", "salmon", "coral", "ivory", "tan", "mint", "lavender",
+      "mustard", "chocolate", "amber", "bronze", "aquamarine", "azure", "crimson", "cream", "rose"
+      ],
+      "sports" : ["football", "tennis", "cricket", "baseball", "basketball", "hockey", "golf", "rugby", "boxing", "swimming"],
+      "professions" : ["doctor", "engineer", "artist", "teacher", "lawyer", "nurse", "pilot", "chef", "architect", "farmer"],
+      "clothing" : ["jacket", "sweater", "jeans", "tshirt", "shorts", "scarf", "socks", "skirt", "hat", "gloves"],
+      "instruments" : ["guitar", "piano", "violin", "drums", "flute", "trumpet", "harp", "cello", "trombone", "saxophone"],
+      "vehicles" : ["bicycle", "airplane", "truck", "car", "motorcycle", "bus", "boat", "train", "scooter", "submarine"],
+      "body_parts" : ["elbow", "stomach", "fingers", "shoulder", "ankle", "knee", "nose", "ear", "neck", "wrist"],
+      "planets" : ["mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune", "pluto"],
+      "furniture" : ["sofa", "table", "wardrobe", "chair", "bed", "bookshelf", "cabinet", "desk", "stool", "dresser"],
+      "food_items" : ["pizza", "burger", "salad", "pasta", "noodles", "sandwich", "omelette", "sushi", "steak", "taco"],
+      "tools" : ["hammer", "wrench", "screwdriver", "pliers", "drill", "saw", "chisel", "level", "axe", "tape"]
+  }
+
+  return words
+
+
+def get_word_and_category(words):
+  number_of_keys = len(words)
+  random_number = random.randint(0,number_of_keys-1)
+
+  category = list(words.keys())[random_number]
+
+  number_of_words = len(words[category])
+
+  random_number2 = random.randint(0,number_of_words-1)
+
+  word = words[category][random_number2]
+
+  return word, category
+
+def initial_guess(word):
+  guess = ""
+  for letter in word:
+    guess += "_"
+  
+  return guess
+
+
+def get_letter_indices(word, letter):
+  indices = []
+  for i in range(len(word)):
+    if word[i] == letter:
+      indices.append(i)
+
+  return indices
+
+
+def print_word(word):
+  for letter in word:
+      print(letter + " ", end="")
+  print()
+
+
+def place_letter(letter, index, word):
+  new = ""
+  for i in range(len(word)):
+    if index == i:
+      new += letter
+    else:
+      new += word[i]
+
+  return new
+
+
+
+
+def game(word, total_lives):
+
+  lives_left = total_lives 
+  guess = initial_guess(word)
+  guesses_made = []
+  
+
+  while True:
+    if lives_left == 0:
+      print("You have no lives left. YOU LOSE!")
+      print(f"The word was {word}")
+      break
+
+    print_word(guess)
+    print(f"Lives left: {lives_left}")
+
+    next = input("Enter a letter: ").lower()
+
+    while True:
+      if len(next) != 1:
+        next = input("Please enter a single letter: ").lower()
+
+      if next in guesses_made:
+        print(f"You have already guesses this letter {next}. Choose a different letter")
+        next = input("Enter the letter: ")
+
+      if len(next) == 1 and next not in guesses_made:
+        break
+
+    guesses_made.append(next)
+    
+    if next in word:
+      print(f"{next} appears in the word")
+      indices = get_letter_indices(word, next)
+      for index in indices:
+        guess = place_letter(next, index, guess)
+    else:
+      print(f"{next} is NOT in the word")
+      lives_left -= 1
+
+    if word == guess:
+      print_word(guess)
+      print("You have correctly guessed the word! YOU WON!")
+      break
+
+
+def game_with_computer():
+  words = get_words_dict()
+  word, category = get_word_and_category(words)
+  total_lives = 5
+
+  print(f"Category: {category} \n")
+
+  game(word, total_lives)
+
+
+def game_with_human(word, lives, hint):
+  if len(hint) == 0:
+    print("NO HINT GIVEN")
+  else:
+    print(f"Hint: {hint}")
+
+  game(word, lives)
+
+
+
+
+def game_play():
+  print("Welcome to hangman!")
+  print("Do you want the computer to give you a word or are you two or more people and want to give eachother a word?")
+  print("Press 1 for computer")
+  print("Press 2 for you and your friend(s)")
+
+  while True:
+    choice = int(input("Enter: "))
+
+    if choice == 1:
+      game_with_computer()
+      break
+
+    elif choice == 2:
+      word = input("Choose a word: ")
+      hint = input("Give a hint (leave blank if no hint): ")
+      lives = int(input("How many lives do you want to give: "))
+      game_with_human(word, lives, hint)
+      break
+
+    else:
+      print("Please enter a valid choice")
+    
+
+def again():
+  game_play()
+
+  while True:
+    choice = input("Do you want to play again? (Y/N): ")
+
+    if choice in ['Y', 'y', 'Yes', 'yes', 'YES']:
+      game_play()
+    elif choice in ['N', 'n', 'No', 'NO', 'no']:
+      break
+    else:
+      print("Please enter a valid answer")
+
+
+again()
+  
+               
+
+  
+
+
+  
